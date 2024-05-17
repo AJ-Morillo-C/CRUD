@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { CreateCategoryDto } from "../../domain/dtos/category/create-category.dto";
 import { CategoryService } from "../services/category.service";
-import {Validators} from '../../config/validator'
+import { Validators } from '../../config/validator'
 import { UpdateCategoryDto } from "../../domain/dtos/category/update-category.dto";
 
 export class CategoryController {
@@ -22,7 +22,7 @@ export class CategoryController {
     this.categoryService.update(updateCategoryDto!, id!)
     .then(category => res.json(category))
     .catch(error => res.status(500).json(error))
-}
+ };
 
   delete = (req:Request, res:Response) => {
   const id = req.params.id
@@ -30,7 +30,7 @@ export class CategoryController {
   this.categoryService.delete(id!)
   .then(category => res.json(category))
   .catch(error => res.status(500).json(error))
-}
+  };
 
 
   findAll = (req: Request, res: Response) => {
