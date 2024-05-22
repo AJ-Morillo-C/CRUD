@@ -1,21 +1,41 @@
-import { promises } from "dns";
-import { RegisterUserDto } from "../../domain/dtos/auth/register-user.dto"; 
-import { UserEntity } from "../../domain/entities/user.entity";
-import { UserModel } from "../../database/mongodb/models/user.model";
-import { UserMaper } from "../../domain/mapers/user.mapers";
 
-export class UserService {
-  async register (registerUserDto: RegisterUserDto): Promise<UserEntity> {
-    const { name,email,password }= registerUserDto;
+import { UserEntity } from "../../domain/entities/user.entity";
+import { LoginDto } from "../../domain/dtos/auth/login_user.dto";
+import { UserModel } from "../../database/mongodb/models/user.models";
+import { UserMaper } from "../../domain/mapers/user.mapers";
+import { RegisterDto } from "../../domain/dtos/auth/register_user.dto";
+import { JwtAdapter } from "../../config/jwt.adapter";
+
+export class AuthService {
+  async register(registerDto: RegisterDto): Promise<UserEntity> {
+    const { name, email, password } = registerDto;
     try {
-      const exist = await UserModel.create({name,email,password});
-      const registerUser = await UserModel.create(registerUserDto);
-      if (!registerUser) throw Error("error");
-      await registerUser.save();
-      return UserMaper.fromEntity(registerUser);
+      const exist = await UserModel.create({name,email,password });
+      if (exist) throw Error("error");
+      const register = await UserModel.create(RegisterDto);
+      if (!register) throw Error("error");
+      await register.save();
+      return UserMaper.fromEntity(register);
     } catch (error) {
         throw error;
-        }
     }
+}
 
+async login(loginDto:LoginDto):Promise<{token:string,user:UserEntity}>{
+  const { email , password} = loginDto;
+    try {
+      const user = await UserModel.findOne({email});
+      if(!user) throw Error('Error')
+      if(user.password !== password) throw Error('Error')
+      const token = await JwtAdapter.generateToken({id:user.id});
+      if(!token) throw Error('Error')
+      return{
+      token,
+      user:UserMaper.fromEntity(user),
+      }
+
+  } catch (error) {
+      throw error; 
+  }
+}
 }

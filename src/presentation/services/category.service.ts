@@ -4,6 +4,16 @@ import { CategoryEntity } from "../../domain/entities/category.entity";
 import { CategoryModel } from "../../database/mongodb/models/category.model";
 import { CategoryMaper } from "../../domain/mapers/category.mapers";
 import { UpdateCategoryDto } from "../../domain/dtos/category/update-category.dto";
+import {PaginationDto} from "../../domain/dtos/category/paginationdto"
+
+interface FindAllCategories{
+  offset:number, 
+  limit:number, 
+  page:number, 
+  total:number, 
+  categories:CategoryEntity[],
+}
+
 export class CategoryService {
   async create(createCategoryDto: CreateCategoryDto): Promise<CategoryEntity> {
     const {name}= createCategoryDto;
@@ -55,5 +65,29 @@ async findOne(id:string):Promise<CategoryEntity>{
       throw error; 
   }
 }
-  findAll() {}
-}
+  async findAll(paginationDto:PaginationDto):Promise<FindAllCategories> {
+    const { offset, limit } = paginationDto
+    try{
+
+      const categories = await CategoryModel.find({})
+      .skip(offset)
+      .limit(limit)
+      const total = await CategoryModel.find({}).countDocuments();
+
+        
+      const mappedCategories = categories.map(CategoryMaper.fromEntity);
+      
+      return {
+        offset,
+        limit,
+        page: offset / limit + 1,
+        total,
+        categories: mappedCategories
+      };
+
+    }catch(error){
+      throw error;
+    }
+    }
+  }
+
