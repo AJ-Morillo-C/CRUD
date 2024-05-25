@@ -8,7 +8,9 @@ export class CategoryRoutes{
         const routes= Router();
         const categoryService = new CategoryService();
         const controller = new CategoryController(categoryService);
-        routes.get('/',controller.findAll);
+        
+        routes.get('/', controller.findAll);
+        
         routes.get('/:id',controller.findOne);
         routes.post('/',[AuthMiddleware.validateJWT],controller.create);
         routes.delete('/:id',controller.delete);

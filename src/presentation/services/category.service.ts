@@ -66,7 +66,7 @@ async findOne(id:string):Promise<CategoryEntity>{
   }
 }
   async findAll(paginationDto:PaginationDto):Promise<FindAllCategories> {
-    const { offset, limit } = paginationDto
+    const { offset = 0, limit = 10 } = paginationDto
     try{
 
       const categories = await CategoryModel.find({})
@@ -75,12 +75,12 @@ async findOne(id:string):Promise<CategoryEntity>{
       const total = await CategoryModel.find({}).countDocuments();
 
         
-      const mappedCategories = categories.map(CategoryMaper.fromEntity);
+      const mappedCategories = categories.map(category => CategoryMaper.fromEntity(category));
       
       return {
         offset,
         limit,
-        page: offset / limit + 1,
+        page: (offset<=0)?1:Math.ceil(offset/limit),
         total,
         categories: mappedCategories
       };

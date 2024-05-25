@@ -6,8 +6,10 @@ export class AuthRoutes{
         const routes= Router();
         const authService = new AuthService();
         const controller = new AuthController(authService);
-        routes.get('/:email',controller.findOne);
-        routes.post('/',controller.create);
+        
+        // api/auth
+        routes.post('/login',controller.login);
+        routes.post('/register',controller.register);
         return routes;
     }
 }

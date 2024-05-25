@@ -35,11 +35,11 @@ export class CategoryController {
 
 
   findAll = (req: Request, res: Response) => {
-    const [error, paginationDto]=  PaginationDto.paginate(req.query);
+    const [error, paginationDto]=  PaginationDto.paginate( req.query );
     if(error) return res.status(400).json({error})
-    this.categoryService.findAll(paginationDto!)
-    .then(category=> res.json(category))
-    .catch(error=> res.status(500).json)
+    this.categoryService.findAll( paginationDto! )
+    .then(categories=> res.json(categories))
+    .catch(error=> res.status(500).json({error}))
   };
 
   findOne = (req: Request, res: Response) => {

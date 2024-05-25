@@ -1,11 +1,11 @@
 import jwt from 'jsonwebtoken';
 import { envs } from './envs';
-const JWT_SECRET = "cualquier.cosa";
+const JWT_SECRET = "mango";
 
 export class JwtAdapter{
 
     static async generateToken( payload: Object, duration:string = '2h' ):Promise<string|null>{
-        return new Promise( ( resolve ) => {
+        return new Promise( (resolve)=>{
             jwt.sign( payload, JWT_SECRET, { expiresIn: duration }, ( error, token ) => {
                 if( error ) return resolve( null );
                 
