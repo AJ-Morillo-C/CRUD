@@ -1,16 +1,19 @@
-export class LoginUserDto {
+import { Validators } from '../../../config/validator';
 
+export class LoginUserDto{
     constructor(
         public email: string,
-        public password: string,
-    ) { }
-    static create(object: { [key: string]: any }): [string?, LoginUserDto?] {
+        public password: string
+    ){}
 
+    static login( object: { [key:string]:any } ): [string?, LoginUserDto?]{
         const { email, password } = object;
+    
+        if (!email) { return ['Missing email', undefined];};
+        if (!Validators.email.test(email)) { return ['Invalid email', undefined];};
+        if (!password) { return ['Missing password', undefined];};
+        if (!Validators.password.test(password)) { return ['Invalid password', undefined]; };
 
-        if (!email) return ['email is required ', undefined];
-        if (!password) return ['password is required ', undefined];
-
-        return [undefined, new LoginUserDto(email, password)]
+        return [undefined, new LoginUserDto(email, password)];
     }
 }

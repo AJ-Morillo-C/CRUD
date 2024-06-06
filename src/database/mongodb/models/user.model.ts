@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { ROLES } from "../../../domain/enums/role.enum";
 
 const userSchema = new mongoose.Schema(
     {
@@ -9,23 +8,17 @@ const userSchema = new mongoose.Schema(
         },
         email:{
             type: String,
-            required: [true, 'email is required'],
         },
         password:{
             type: String,
-            required: [true, 'password is required'],
         },
-
-        role:{
-            type: String,
-            enum: Object.values(ROLES),
-            required: [true, 'role is required'],
+        roles:{
+            type: Array<String>,
+            default: ['USER_ROLE'],
         },
-
         img:{
             type: String,
-        }
-
+        },
     });
 
 export const UserModel = mongoose.model('User', userSchema);
