@@ -4,4 +4,3 @@
 1. ejecutar ```npm i```
 2. ejecutar ```npm run dev```
 
-## GRUPO: Ali Morillo, Jean Piña & Jose Sibada
